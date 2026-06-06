@@ -223,7 +223,7 @@ body {
 .hero {
   min-height:100vh;padding-top:64px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  position:relative;overflow:hidden;padding-left:2rem;padding-right:2rem;
+  position:relative;padding-left:2rem;padding-right:2rem;
 }
 .hero-grid-bg {
   position:absolute;top:0;left:0;width:100%;height:100%;
@@ -305,13 +305,15 @@ body {
 /* PAINEL SOBRE — oculto por padrão */
 #sobre-panel {
   max-width:900px;margin:0 auto;
-  display:none;
-  animation:panel-open 0.5s ease forwards;
+  max-height:0;overflow:hidden;
+  opacity:0;
+  transition:max-height 0.7s ease, opacity 0.5s ease, padding 0.5s ease;
+  padding:0 0;
 }
-#sobre-panel.open { display:block; }
-@keyframes panel-open {
-  from{opacity:0;transform:translateY(20px)}
-  to{opacity:1;transform:translateY(0)}
+#sobre-panel.open {
+  max-height:2000px;
+  opacity:1;
+  padding:0 0 4rem;
 }
 
 .sobre-divider {
@@ -374,35 +376,7 @@ body {
 .section-title { font-family:var(--font-hud);font-size:clamp(1.8rem,5vw,3rem);font-weight:700;color:var(--white);text-shadow:0 0 30px rgba(0,255,65,0.3);margin-bottom:1rem; }
 .section-divider { width:80px;height:2px;background:linear-gradient(90deg,var(--green),var(--blue));margin:0 auto 1rem;box-shadow:var(--glow-green); }
 
-/* ADMIN PANEL */
-.admin-toggle {
-  position:fixed;bottom:20px;right:20px;z-index:200;
-  background:rgba(0,0,0,0.9);border:1px solid rgba(0,255,65,0.3);
-  color:var(--green);font-family:var(--font-mono);font-size:0.65rem;
-  padding:8px 12px;cursor:pointer;letter-spacing:2px;transition:all 0.3s;box-shadow:var(--glow-green);
-}
-.admin-toggle:hover { background:var(--green);color:var(--black); }
-.admin-panel {
-  position:fixed;bottom:60px;right:20px;z-index:200;
-  background:rgba(0,5,0,0.97);border:1px solid rgba(0,255,65,0.4);
-  padding:1.5rem;width:300px;box-shadow:0 0 40px rgba(0,255,65,0.15);
-  display:none;backdrop-filter:blur(12px);
-}
-.admin-panel.open { display:block;animation:panel-slide-in 0.3s ease; }
-@keyframes panel-slide-in { from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)} }
-.admin-panel-title { font-family:var(--font-hud);font-size:0.8rem;color:var(--green);text-shadow:var(--glow-green);letter-spacing:3px;margin-bottom:1.25rem;padding-bottom:0.75rem;border-bottom:1px solid rgba(0,255,65,0.2); }
-.admin-field { margin-bottom:1rem; }
-.admin-field label { font-family:var(--font-mono);font-size:0.65rem;color:rgba(0,255,65,0.6);letter-spacing:2px;display:block;margin-bottom:6px; }
-.admin-field input[type="text"],.admin-field input[type="url"] { width:100%;background:rgba(0,255,65,0.05);border:1px solid rgba(0,255,65,0.3);color:var(--green);font-family:var(--font-mono);font-size:0.75rem;padding:8px 10px;outline:none;transition:border-color 0.3s;letter-spacing:1px; }
-.admin-field input:focus { border-color:var(--green);box-shadow:var(--glow-green); }
-.admin-status-buttons { display:flex;gap:0.5rem; }
-.admin-btn { flex:1;padding:8px;font-family:var(--font-mono);font-size:0.65rem;letter-spacing:2px;cursor:pointer;border:1px solid;background:transparent;transition:all 0.3s; }
-.admin-btn-online { color:var(--green);border-color:rgba(0,255,65,0.4); }
-.admin-btn-online:hover,.admin-btn-online.active { background:var(--green);color:var(--black);box-shadow:var(--glow-green); }
-.admin-btn-offline { color:var(--red);border-color:rgba(255,0,64,0.4); }
-.admin-btn-offline:hover,.admin-btn-offline.active { background:var(--red);color:var(--white);box-shadow:var(--glow-red); }
-.admin-apply-btn { width:100%;padding:10px;font-family:var(--font-hud);font-size:0.7rem;letter-spacing:3px;color:var(--black);background:var(--green);border:none;cursor:pointer;transition:all 0.3s;box-shadow:var(--glow-green);margin-top:0.5rem;text-transform:uppercase; }
-.admin-apply-btn:hover { background:var(--blue);box-shadow:var(--glow-blue); }
+
 
 .reveal { opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease; }
 .reveal.revealed { opacity:1;transform:translateY(0); }
@@ -527,8 +501,8 @@ footer::before { content:'';position:absolute;top:0;left:0;right:0;height:1px;ba
     </div>
   </section>
 
-  <!-- SEÇÃO SOBRE — revelada ao clicar em Saber Mais -->
-  <section id="sobre-section" style="padding: 0 2rem 5rem; position:relative; z-index:3;">
+  <!-- SEÇÃO SOBRE — revelada ao clicar em Saber Mais, aparece no lugar sem scroll -->
+  <section id="sobre-section" style="position:relative;z-index:3;padding:0 2rem;">
     <div id="sobre-panel">
 
       <div class="sobre-divider"></div>
@@ -595,20 +569,7 @@ footer::before { content:'';position:absolute;top:0;left:0;right:0;height:1px;ba
             expressivos — o SKY-HUB entrega performance de nível profissional.
           </p>
 
-          <div class="about-stats">
-            <div class="stat-item">
-              <span class="stat-value text-green">∞</span>
-              <span class="stat-label">JOGOS</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-value text-blue">99.8%</span>
-              <span class="stat-label">UPTIME</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-value text-yellow">24/7</span>
-              <span class="stat-label">SUPORTE</span>
-            </div>
-          </div>
+
         </div>
       </div>
 
@@ -625,27 +586,7 @@ footer::before { content:'';position:absolute;top:0;left:0;right:0;height:1px;ba
 
 </div><!-- /main-page -->
 
-<!-- ADMIN PANEL -->
-<button class="admin-toggle" id="admin-toggle-btn" title="Painel de Admin">⚙ ADMIN</button>
-<div class="admin-panel" id="admin-panel">
-  <div class="admin-panel-title">⚙ PAINEL DE CONFIGURAÇÃO</div>
-  <div class="admin-field">
-    <label>STATUS DO SISTEMA</label>
-    <div class="admin-status-buttons">
-      <button class="admin-btn admin-btn-online active" id="btn-set-online">● ONLINE</button>
-      <button class="admin-btn admin-btn-offline" id="btn-set-offline">● OFFLINE</button>
-    </div>
-  </div>
-  <div class="admin-field">
-    <label>VERSÃO DO SCRIPT</label>
-    <input type="text" id="input-version" value="v2.4.1" placeholder="ex: v2.4.1">
-  </div>
-  <div class="admin-field">
-    <label>LINK DO DISCORD</label>
-    <input type="url" id="input-discord" value="https://discord.gg/SEULINKAQUI" placeholder="https://discord.gg/...">
-  </div>
-  <button class="admin-apply-btn" id="admin-apply-btn">✔ APLICAR CONFIGURAÇÕES</button>
-</div>
+
 
 <script>
 /* MATRIX RAIN */
@@ -793,9 +734,6 @@ footer::before { content:'';position:absolute;top:0;left:0;right:0;height:1px;ba
         const now=new Date();
         el.textContent=`${String(now.getDate()).padStart(2,'0')}/${String(now.getMonth()+1).padStart(2,'0')}/${now.getFullYear()}`;
       }
-      setTimeout(()=>{
-        document.getElementById('sobre-section').scrollIntoView({behavior:'smooth',block:'start'});
-      },100);
       // latência
       updateLatency();
     } else {
@@ -812,42 +750,7 @@ footer::before { content:'';position:absolute;top:0;left:0;right:0;height:1px;ba
   }
 })();
 
-/* ADMIN PANEL */
-(function(){
-  let currentStatus='online',currentVersion='v2.4.1',discordLink='https://discord.gg/SEULINKAQUI';
-  const adminToggle=document.getElementById('admin-toggle-btn');
-  const adminPanel=document.getElementById('admin-panel');
-  const btnOnline=document.getElementById('btn-set-online');
-  const btnOffline=document.getElementById('btn-set-offline');
-  const inputVersion=document.getElementById('input-version');
-  const inputDiscord=document.getElementById('input-discord');
-  const applyBtn=document.getElementById('admin-apply-btn');
-  const navBadge=document.getElementById('nav-status-badge');
-  const navStatusText=document.getElementById('nav-status-text');
-  const navVersionText=document.getElementById('nav-version-text');
-  const mainStatusText=document.getElementById('main-status-text');
-  const mainVersionText=document.getElementById('main-version-text');
-  const heroDiscordBtn=document.getElementById('hero-discord-btn');
 
-  adminToggle.addEventListener('click',()=>adminPanel.classList.toggle('open'));
-  btnOnline.addEventListener('click',()=>{currentStatus='online';btnOnline.classList.add('active');btnOffline.classList.remove('active');});
-  btnOffline.addEventListener('click',()=>{currentStatus='offline';btnOffline.classList.add('active');btnOnline.classList.remove('active');});
-  applyBtn.addEventListener('click',()=>{
-    currentVersion=inputVersion.value.trim()||currentVersion;
-    discordLink=inputDiscord.value.trim()||discordLink;
-    applyStatus(currentStatus);applyVersion(currentVersion);applyDiscordLinks(discordLink);
-    applyBtn.textContent='✔ APLICADO!';
-    setTimeout(()=>{applyBtn.textContent='✔ APLICAR CONFIGURAÇÕES';},1500);
-    setTimeout(()=>{adminPanel.classList.remove('open');},1000);
-  });
-  function applyStatus(s){
-    if(s==='online'){navBadge.className='nav-status-badge online';navStatusText.textContent='ONLINE';if(mainStatusText){mainStatusText.textContent='● ONLINE';mainStatusText.className='hud-item-value online-text';}}
-    else{navBadge.className='nav-status-badge offline';navStatusText.textContent='OFFLINE';if(mainStatusText){mainStatusText.textContent='● OFFLINE';mainStatusText.className='hud-item-value offline-text';}}
-  }
-  function applyVersion(v){navVersionText.textContent=v;if(mainVersionText)mainVersionText.textContent=v;}
-  function applyDiscordLinks(link){if(heroDiscordBtn)heroDiscordBtn.href=link;}
-  applyStatus(currentStatus);applyVersion(currentVersion);applyDiscordLinks(discordLink);
-})();
 
 /* GLITCH PERIÓDICO */
 (function(){
